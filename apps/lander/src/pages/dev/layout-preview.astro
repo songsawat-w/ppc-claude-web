@@ -1,0 +1,73 @@
+---
+if (!import.meta.env.DEV) {
+  return Astro.redirect("/404");
+}
+
+const mockLayoutConfig = {
+  brand: "LoanBridge",
+  theme: "dark",
+  sections: [
+    "hero_center",
+    "trust_bar",
+    "benefits_grid",
+    "faq_simple",
+    "cta_block",
+    "footer_standard"
+  ]
+};
+
+const formatted = JSON.stringify(mockLayoutConfig, null, 2);
+---
+
+<html>
+  <head>
+    <title>Layout Preview</title>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: monospace;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 40px;
+      }
+      h1 {
+        font-family: system-ui;
+      }
+      .box {
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+        overflow-x: auto;
+      }
+      ul {
+        margin-top: 20px;
+      }
+      li {
+        margin-bottom: 6px;
+      }
+      a {
+        display: inline-block;
+        margin-top: 30px;
+        color: #38bdf8;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Layout Preview (Mock)</h1>
+
+    <div class="box">
+      <pre>{formatted}</pre>
+    </div>
+
+    <h2>Section Order</h2>
+    <ul>
+      {mockLayoutConfig.sections.map((section, i) => (
+        <li>{i + 1}. {section}</li>
+      ))}
+    </ul>
+
+    <a href="/dev">← Back to Dev Panel</a>
+  </body>
+</html>
