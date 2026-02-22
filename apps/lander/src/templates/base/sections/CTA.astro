@@ -1,0 +1,41 @@
+---
+import type { LPTemplateConfig } from '@/lib/template-types';
+import AmountSlider from '@/components/AmountSlider.astro';
+import ZipInput from '@/components/ZipInput.astro';
+import CTAButton from '@/components/CTAButton.astro';
+
+interface Props {
+  config: LPTemplateConfig;
+}
+
+const { config } = Astro.props;
+const leadsGateFormId = import.meta.env.PUBLIC_LEADSGATE_FORM_ID || '';
+---
+
+<section class="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 p-6 sm:p-8 mb-8">
+  <div class="space-y-6">
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[var(--color-primary)] text-white text-sm font-bold">1</span>
+        <span class="text-sm font-semibold text-gray-700">Choose your amount</span>
+      </div>
+      <AmountSlider />
+    </div>
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[var(--color-primary)] text-white text-sm font-bold">2</span>
+        <span class="text-sm font-semibold text-gray-700">Enter your ZIP code</span>
+      </div>
+      <ZipInput />
+    </div>
+    <div class="pt-2">
+      <CTAButton leadsGateFormId={leadsGateFormId} />
+    </div>
+  </div>
+  <p class="mt-4 text-xs text-gray-400 text-center">
+    By clicking "See My Options" you agree to our
+    <a href="/terms" class="underline">Terms</a> and
+    <a href="/privacy" class="underline">Privacy Policy</a>.
+    Checking rates won't affect your credit score.
+  </p>
+</section>

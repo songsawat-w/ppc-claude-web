@@ -26,11 +26,62 @@ import { ErrorLog, logError } from "./components/ErrorLog";
 // Neon connection string — stored in settings or hardcoded for now
 const NEON_URL = import.meta.env.PUBLIC_NEON_URL || "";
 
+// Settings keys that must NEVER be overwritten by remote sources (Neon/API)
+// once they exist in localStorage. Only explicit user saves can change them.
+const LOCKED_SETTINGS_KEYS = [
+  "neonUrl",
+  "cfApiToken",
+  "cfAccountId",
+  "d1DatabaseId",
+  "apiKey",
+  "githubToken",
+  "netlifyToken",
+  "vercelToken",
+  "awsAccessKey",
+  "awsSecretKey",
+];
+
+// Immutable pinned credentials — these ALWAYS win over every source.
+// To change them, update this object and redeploy.
+const PINNED_SETTINGS = {
+  cfAccountId: "9fa4d356e0c6fa0612b3da1e03c7e707",
+  cfApiToken: "M1zM_1QpxNudBhwwLeyMIa-qVbHLpT6fNIy6_CH-",
+  d1DatabaseId: "7d31d941-f863-46f5-99c2-2179de821573",
+  neonUrl: "postgresql://neondb_owner:npg_aPs96TvVDZex@ep-restless-mud-afw5mows-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+};
+
+/**
+ * Merge remote settings into local, but never overwrite locked keys
+ * that already have a value in localStorage.
+ * PINNED_SETTINGS are stamped last — they can never be changed at runtime.
+ * Returns { merged, blocked } where blocked lists keys that remote tried to change.
+ */
+function safeMerge(remoteSettings, localSettings) {
+  const blocked = [];
+  const merged = { ...remoteSettings, ...localSettings };
+  for (const key of LOCKED_SETTINGS_KEYS) {
+    if (localSettings[key] !== undefined && localSettings[key] !== "") {
+      if (remoteSettings[key] !== undefined && remoteSettings[key] !== localSettings[key]) {
+        blocked.push(key);
+      }
+      merged[key] = localSettings[key];
+    }
+  }
+  // Pinned values always win — check for conflicts
+  for (const [key, val] of Object.entries(PINNED_SETTINGS)) {
+    if (merged[key] !== undefined && merged[key] !== val) {
+      if (!blocked.includes(key)) blocked.push(key);
+    }
+  }
+  Object.assign(merged, PINNED_SETTINGS);
+  return { merged, blocked };
+}
+
 export default function App() {
   const [page, setPage] = useState("dashboard");
   const [sites, setSites] = useState([]);
   const [ops, setOps] = useState({ domains: [], accounts: [], cfAccounts: [], registrarAccounts: [], profiles: [], payments: [], logs: [], risks: [] });
-  const [settings, setSettings] = useState(() => LS.get("settings") || {});
+  const [settings, setSettings] = useState(() => ({ ...(LS.get("settings") || {}), ...PINNED_SETTINGS }));
   const [stats, setStats] = useState({ builds: 0, spend: 0 });
   const [toast, setToast] = useState(null);
   const [wizData, setWizData] = useState(null);
@@ -41,6 +92,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [apiOk, setApiOk] = useState(false);
   const [neonOk, setNeonOk] = useState(false);
+  const [bootWarnings, setBootWarnings] = useState([]);
 
   // Global error capture — feeds into Error Log tab
   useEffect(() => {
@@ -79,7 +131,8 @@ export default function App() {
     const localSettings = LS.get("settings") || {};
 
     // 1. Try Neon first (primary data store)
-    const neonConnStr = NEON_URL || localSettings.neonUrl || "";
+    // Pinned neonUrl always wins over env var and localStorage
+    const neonConnStr = PINNED_SETTINGS.neonUrl || NEON_URL || localSettings.neonUrl || "";
     let neonReady = false;
 
     // Only attempt Neon if the URL looks like a real connection string
@@ -100,11 +153,14 @@ export default function App() {
             ]);
 
             // Merge: localStorage wins over Neon (user's most recent saves)
-            // then Neon fills in anything not in localStorage
+            // Locked keys are NEVER overwritten by remote sources
             if (neonSettings && Object.keys(neonSettings).length > 0) {
-              const merged = { ...neonSettings, ...localSettings };
+              const { merged, blocked } = safeMerge(neonSettings, localSettings);
               setSettings(merged);
               LS.set("settings", merged);
+              if (blocked.length > 0) {
+                setBootWarnings(prev => [...prev, { source: "Neon DB", keys: blocked }]);
+              }
             }
 
             // Sites from Neon
@@ -159,10 +215,13 @@ export default function App() {
         if (!neonReady) {
           if (data.sites) setSites(data.sites);
           if (data.settings) {
-            // localStorage wins — user's local saves are most recent
-            const merged = { ...data.settings, ...localSettings };
+            // localStorage wins — locked keys never overwritten by API
+            const { merged, blocked } = safeMerge(data.settings, localSettings);
             setSettings(merged);
             LS.set("settings", merged);
+            if (blocked.length > 0) {
+              setBootWarnings(prev => [...prev, { source: "Legacy API", keys: blocked }]);
+            }
           }
           if (data.stats) setStats(data.stats);
           if (data.deploys) setDeploys(data.deploys);
@@ -181,7 +240,7 @@ export default function App() {
 
   const recoverNeonConnection = async () => {
     const localSettings = LS.get("settings") || {};
-    const neonConnStr = NEON_URL || localSettings.neonUrl || "";
+    const neonConnStr = PINNED_SETTINGS.neonUrl || NEON_URL || localSettings.neonUrl || "";
 
     if (neonConnStr && neonConnStr.includes("@") && !neonConnStr.includes("ep-xxx")) {
       const reconnected = db.forceReconnect();
@@ -196,9 +255,12 @@ export default function App() {
           ]);
 
           if (neonSettings) {
-            const merged = { ...neonSettings, ...localSettings };
+            const { merged, blocked } = safeMerge(neonSettings, localSettings);
             setSettings(merged);
             LS.set("settings", merged);
+            if (blocked.length > 0) {
+              setBootWarnings(prev => [...prev, { source: "Neon reconnect", keys: blocked }]);
+            }
           }
 
           if (neonSites?.length > 0) {
@@ -567,7 +629,7 @@ export default function App() {
       <main style={{ flex: 1, marginLeft: ml, minHeight: "100vh", transition: "margin .2s" }}>
         <TopBar stats={stats} settings={settings} deploys={deploys} apiOk={apiOk} neonOk={neonOk} onReconnectNeon={recoverNeonConnection} />
         <div style={{ padding: "24px 28px" }}>
-          {page === "dashboard" && <Dashboard sites={sites} stats={stats} ops={ops} setPage={setPage} startCreate={startCreate} settings={settings} apiOk={apiOk} neonOk={neonOk} />}
+          {page === "dashboard" && <Dashboard sites={sites} stats={stats} ops={ops} setPage={setPage} startCreate={startCreate} settings={settings} apiOk={apiOk} neonOk={neonOk} bootWarnings={bootWarnings} />}
           {page === "sites" && <Sites sites={sites} del={delSite} notify={notify} startCreate={startCreate} settings={settings} addDeploy={addDeploy} ops={ops} updateSite={updateSite} />}
           {page === "template-editor" && <TemplateEditor notify={notify} />}
           {page === "create" && wizData && <Wizard config={wizData} setConfig={setWizData} addSite={addSite} setPage={setPage} settings={settings} notify={notify} />}

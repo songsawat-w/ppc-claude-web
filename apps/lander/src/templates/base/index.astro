@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ComplianceBlock from '../../components/ComplianceBlock.astro';
+import { SECTION_REGISTRY } from '../../lib/section-registry';
+import type { LPTemplateConfig } from '../../lib/template-types';
+
+interface Props {
+  config: LPTemplateConfig;
+}
+
+const { config } = Astro.props;
+
+const sections =
+  config.sections && config.sections.length > 0
+    ? config.sections
+    : ["hero", "benefits", "faq", "cta"];
+
+const accountId = import.meta.env.PUBLIC_ACCOUNT_ID || '';
+const trackUrl = import.meta.env.PUBLIC_TRACK_URL || '/track';
+const voluumDomain = import.meta.env.PUBLIC_VOLUUM_DOMAIN || '';
+---
+
+<BaseLayout
+  title={`${config.brand} — Compare Personal Loan Offers`}
+  description="Compare personal loan offers from top lenders. Check rates without affecting your credit score. Fast, secure, and free."
+  accountId={accountId}
+  trackUrl={trackUrl}
+  voluumDomain={voluumDomain}
+  noindex={true}
+>
+  <main class="flex flex-col items-center px-4 py-8 sm:py-12">
+    {sections.map((key) => {
+      const Component = SECTION_REGISTRY[key];
+      if (!Component) return null;
+      return <Component config={config} />;
+    })}
+    <ComplianceBlock companyName={config.brand} />
+  </main>
+</BaseLayout>

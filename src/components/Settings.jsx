@@ -61,6 +61,49 @@ export function Settings({ settings, setSettings, stats, apiOk, neonOk }) {
     const [loadingFolders, setLoadingFolders] = useState(false);
     const [saving, setSaving] = useState(false);
 
+    // Re-sync local state when settings prop changes (e.g. after bootApp loads from Neon/API)
+    useEffect(() => {
+        setNeonUrl(settings.neonUrl || "");
+        setApiKey(settings.apiKey || "");
+        setGeminiKey(settings.geminiKey || "");
+        setNetlifyToken(settings.netlifyToken || "");
+        setNetlifyTeamSlug(settings.netlifyTeamSlug || "");
+        setLcToken(settings.lcToken || "");
+        setLcTeamUuid(settings.lcTeamUuid || "");
+        setDefaultBinUuid(settings.defaultBinUuid || "");
+        setDefaultBillingUuid(settings.defaultBillingUuid || "");
+        setMlToken(settings.mlToken || "");
+        setMlEmail(settings.mlEmail || "");
+        setMlPassword(settings.mlPassword || "");
+        setMlFolderId(settings.mlFolderId || "");
+        setDefaultProxyProvider(settings.defaultProxyProvider || "multilogin");
+        setCfApiToken(settings.cfApiToken || "");
+        setCfAccountId(settings.cfAccountId || "");
+        setAwsAccessKey(settings.awsAccessKey || "");
+        setAwsSecretKey(settings.awsSecretKey || "");
+        setAwsRegion(settings.awsRegion || "us-east-1");
+        setS3Bucket(settings.s3Bucket || "");
+        setCloudfrontDistId(settings.cloudfrontDistId || "");
+        setVpsHost(settings.vpsHost || "");
+        setVpsPort(settings.vpsPort || "22");
+        setVpsUser(settings.vpsUser || "");
+        setVpsPath(settings.vpsPath || "");
+        setVpsAuthMethod(settings.vpsAuthMethod || "key");
+        setVpsKey(settings.vpsKey || "");
+        setVpsWorkerUrl(settings.vpsWorkerUrl || "");
+        setVercelToken(settings.vercelToken || "");
+        setGithubToken(settings.githubToken || "");
+        setGithubRepoOwner(settings.githubRepoOwner || "");
+        setGithubRepoName(settings.githubRepoName || "");
+        setGithubRepoBranch(settings.githubRepoBranch || "main");
+        setGithubDeployWorkflow(settings.githubDeployWorkflow || "deploy-sites.yml");
+        setNetlifyTarget(settings.netlifyTarget || "");
+        setCfPagesTarget(settings.cfPagesTarget || "");
+        setD1AccountId(settings.d1AccountId || "");
+        setD1DatabaseId(settings.d1DatabaseId || "");
+        setD1ApiToken(settings.d1ApiToken || "");
+    }, [settings]);
+
     // Sync saved token into service on mount
     useEffect(() => {
         if (mlToken) multiloginApi.setToken(mlToken);

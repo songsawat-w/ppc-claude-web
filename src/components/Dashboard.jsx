@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 
-export function Dashboard({ sites, stats, ops, setPage, startCreate, settings = {}, apiOk, neonOk }) {
+export function Dashboard({ sites, stats, ops, setPage, startCreate, settings = {}, apiOk, neonOk, bootWarnings = [] }) {
     const recent = sites.slice(0, 5);
     const risks = useMemo(() => detectRisks(ops), [ops]);
     const buildMode = String(import.meta.env?.MODE || "unknown");
@@ -42,6 +42,27 @@ export function Dashboard({ sites, stats, ops, setPage, startCreate, settings = 
                 </div>
                 <Button onClick={startCreate}>➕ Create New LP</Button>
             </div>
+
+            {/* Settings Tamper Warning */}
+            {bootWarnings.length > 0 && (
+                <Card className="mb-4 border-[hsl(var(--warning))/50] bg-[hsl(var(--warning))/8] p-4">
+                    <div className="text-xs font-bold text-[hsl(var(--warning))] mb-1.5">🔒 Settings Protection Active</div>
+                    <p className="text-[11px] text-[hsl(var(--muted-foreground))] mb-2">
+                        Remote sources tried to overwrite locked settings during boot. All changes were blocked — pinned values are enforced.
+                    </p>
+                    {bootWarnings.map((w, i) => (
+                        <div key={i} className="text-[11px] text-[hsl(var(--foreground))] py-1 flex items-start gap-2">
+                            <Badge variant="warning">{w.source}</Badge>
+                            <span className="font-mono text-[10px] text-[hsl(var(--muted-foreground))]">
+                                blocked: {w.keys.join(", ")}
+                            </span>
+                        </div>
+                    ))}
+                    <button onClick={() => setPage("settings")} className="text-[11px] text-[hsl(var(--primary))] bg-transparent border-none cursor-pointer mt-2 p-0 hover:underline">
+                        Review Settings →
+                    </button>
+                </Card>
+            )}
 
             {/* Code Signature */}
             <Card className="mb-4 border-[hsl(var(--success))/40] bg-[hsl(var(--success))/8] p-3">
