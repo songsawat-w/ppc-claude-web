@@ -53,9 +53,9 @@ registerTemplate('simple-lp', {
 // Register Pet Care Loans Template
 registerTemplate('pet-care-loans', {
   name: 'Pet Care Loans',
-  description: 'Pet care financing landing page based on PDL V3 architecture',
+  description: 'Pet care financing LP with hero form, trust badges, features grid, and full tracking support',
   badge: 'New',
-  category: 'general',
+  category: 'pet-care',
   generate: generatePetCareLoans,
 });
 
