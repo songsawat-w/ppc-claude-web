@@ -390,6 +390,87 @@
         ]
       }
     },
+    "claude-api": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "critical",
+      "description": "Build apps with the Claude API or Anthropic SDK",
+      "promptTriggers": {
+        "keywords": [
+          "anthropic",
+          "@anthropic-ai/sdk",
+          "claude_agent_sdk",
+          "Claude API",
+          "Anthropic SDK",
+          "Agent SDK",
+          "claude-sonnet",
+          "claude-opus",
+          "claude-haiku",
+          "messages.create",
+          "client.messages"
+        ],
+        "intentPatterns": [
+          "import.*?(anthropic|@anthropic-ai)",
+          "(use|call|integrate).*?(Claude API|Anthropic|claude-sonnet|claude-opus)",
+          "(build|create).*?(AI|LLM).*?(app|integration|feature)",
+          "messages\\.create",
+          "(stream|tool use|tool_use).*?claude"
+        ]
+      }
+    },
+    "simplify": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Review changed code for reuse, quality, and efficiency, then fix any issues found",
+      "promptTriggers": {
+        "keywords": [
+          "simplify",
+          "clean up",
+          "code review",
+          "refactor",
+          "improve code",
+          "code quality",
+          "duplication",
+          "optimize code",
+          "review changes"
+        ],
+        "intentPatterns": [
+          "(simplify|clean up|improve).*?code",
+          "(review|check).*?(changes|diff|code)",
+          "(remove|eliminate).*?duplication",
+          "(optimize|improve).*?(quality|efficiency|performance)",
+          "is there.*?(simpler|better).*?way"
+        ]
+      }
+    },
+    "loop": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "Run a prompt or slash command on a recurring interval",
+      "promptTriggers": {
+        "keywords": [
+          "every",
+          "recurring",
+          "poll",
+          "keep running",
+          "interval",
+          "repeat",
+          "periodically",
+          "watch for",
+          "monitor",
+          "loop"
+        ],
+        "intentPatterns": [
+          "every (\\d+).*?(minute|second|hour|min|sec)",
+          "(poll|check|monitor).*?(every|interval|recurring)",
+          "(keep|run).*?(running|checking|polling)",
+          "watch (for|the).*?(deploy|status|logs|errors)",
+          "(repeat|loop|recurring).*?(task|command|check)"
+        ]
+      }
+    },
     "infra-ops": {
       "type": "domain",
       "enforcement": "suggest",
