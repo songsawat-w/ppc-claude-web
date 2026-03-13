@@ -1,7 +1,49 @@
 ---
 name: browser-debugging
-description: "Debug web apps via Chrome DevTools Protocol. Read console logs, monitor network requests, capture screenshots. Use when troubleshooting browser issues, form submissions not working, or investigating client-side errors."
+description: "Debug web apps via Browser MCP (preferred) or Chrome DevTools Protocol (cdp-cli). Read console logs, monitor network requests, capture screenshots. Use when troubleshooting browser issues, form submissions not working, or investigating client-side errors."
 ---
+
+# Browser Debugging
+
+## Option 1: Browser MCP (Preferred)
+
+ใช้ Browser MCP เมื่อ MCP ถูก configure ไว้ — ไม่ต้อง launch Chrome แยก ทำงานได้เลย
+
+### MCP Tools
+| Task | Tool |
+|------|------|
+| เปิด URL | `mcp__browser__navigate` |
+| Screenshot | `mcp__browser__screenshot` |
+| Console logs | `mcp__browser__get_console_logs` |
+| Network logs | `mcp__browser__get_network_logs` |
+| Run JavaScript | `mcp__browser__evaluate` |
+| Click element | `mcp__browser__click` |
+| Type text | `mcp__browser__type` |
+| DOM snapshot | `mcp__browser__get_dom` |
+
+### Quick Workflows (Browser MCP)
+
+```
+# Debug console errors
+→ navigate → get_console_logs (filter: error)
+
+# Check network requests
+→ navigate → get_network_logs
+
+# Screenshot desktop + mobile
+→ navigate → screenshot (1280×800)
+→ evaluate: document.body.style.width='375px' → screenshot
+
+# Run JS
+→ evaluate: "localStorage.getItem('lpf2-settings')"
+
+# Debug form
+→ navigate → click (form button) → get_console_logs → get_network_logs
+```
+
+---
+
+## Option 2: cdp-cli (Chrome DevTools Protocol)
 
 # Browser Debugging (cdp-cli)
 

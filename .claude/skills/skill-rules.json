@@ -512,6 +512,194 @@
           "(docker|container).*?(build|run|deploy|compose)"
         ]
       }
+    },
+    "leads-pipeline": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Leads pipeline management via Cloudflare MCP. Query D1 for leads, callbacks, conversions, pixel events.",
+      "promptTriggers": {
+        "keywords": [
+          "leads",
+          "lead",
+          "callback",
+          "callbacks",
+          "LeadsGate",
+          "conversion upload",
+          "dedup",
+          "dedup_keys",
+          "lead_callbacks",
+          "Voluum",
+          "soldLead",
+          "newLead",
+          "revenue",
+          "payout",
+          "postback",
+          "pixel events"
+        ],
+        "intentPatterns": [
+          "(check|view|query|debug).*?(leads|callbacks|conversions)",
+          "(lead|callback).*?(missing|not showing|issue|problem)",
+          "(revenue|payout).*?(discrepancy|missing|mismatch)",
+          "Voluum.*?(upload|postback|conversion|failed)",
+          "(dedup|duplicate).*?(lead|conversion|click)",
+          "LeadsGate.*?(callback|lead|issue)",
+          "(pixel|tracking).*?(event|fire|not working)"
+        ]
+      }
+    },
+    "cloudflare-workers": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Cloudflare Workers development via Cloudflare MCP. Deploy workers, D1, DNS, wrangler.",
+      "promptTriggers": {
+        "keywords": [
+          "wrangler",
+          "cloudflare worker",
+          "CF worker",
+          "worker deploy",
+          "D1 database",
+          "D1 migration",
+          "D1 schema",
+          "worker logs",
+          "tail logs",
+          "wrangler deploy",
+          "pixel-worker",
+          "api-worker",
+          "cf-proxy",
+          "KV namespace",
+          "KV storage"
+        ],
+        "intentPatterns": [
+          "(deploy|publish|update).*?(worker|wrangler)",
+          "(D1|database).*?(migration|schema|query|execute)",
+          "(worker|wrangler).*?(log|tail|debug|error)",
+          "(KV|key-value).*?(store|namespace|write|read)",
+          "cloudflare.*?(worker|D1|KV|zone|DNS)",
+          "(pixel-worker|api-worker|cf-proxy).*?(deploy|update|fix)"
+        ]
+      }
+    },
+    "db-ops": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Neon PostgreSQL operations via Neon MCP. Manage sites, settings, deploy_history tables.",
+      "promptTriggers": {
+        "keywords": [
+          "Neon",
+          "PostgreSQL",
+          "postgres",
+          "neon database",
+          "sites table",
+          "settings table",
+          "deploy_history",
+          "schema migration",
+          "JSONB",
+          "database query",
+          "neon MCP",
+          "db migration"
+        ],
+        "intentPatterns": [
+          "(query|check|update|migrate).*?(Neon|postgres|database)",
+          "(sites|settings|deploy_history).*?(table|query|update)",
+          "schema.*?(migration|change|alter|add column)",
+          "JSONB.*?(query|update|field)",
+          "(database|db).*?(backup|vacuum|analyze|optimize)",
+          "neon.*?(MCP|database|connection|query)"
+        ]
+      }
+    },
+    "lp-qa": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Visual QA for landing pages via Browser MCP. Screenshot, compliance check, pixel verification.",
+      "promptTriggers": {
+        "keywords": [
+          "QA",
+          "visual check",
+          "landing page check",
+          "LP check",
+          "screenshot",
+          "mobile view",
+          "compliance check",
+          "before deploy",
+          "verify LP",
+          "check landing page",
+          "visual QA",
+          "page looks"
+        ],
+        "intentPatterns": [
+          "(QA|quality|verify|check).*?(landing page|LP|page)",
+          "(screenshot|capture|view).*?(landing page|LP|mobile|desktop)",
+          "(compliance|disclaimer|APR).*?(check|verify|missing)",
+          "(before|after).*?(deploy|deployment).*?(check|verify)",
+          "(mobile|desktop).*?(view|viewport|screenshot)",
+          "(pixel|tracking).*?(fire|verify|check).*?(LP|page)"
+        ]
+      }
+    },
+    "conversion-debug": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Debug conversion tracking: click_id flow, Voluum S2S postback, pixel events, LeadsGate callbacks.",
+      "promptTriggers": {
+        "keywords": [
+          "conversion missing",
+          "conversion not showing",
+          "click_id",
+          "S2S postback",
+          "Voluum not receiving",
+          "tracking broken",
+          "revenue missing",
+          "conversion debug",
+          "postback not firing",
+          "lead not uploaded",
+          "pixel not firing",
+          "tracking issue"
+        ],
+        "intentPatterns": [
+          "(conversion|revenue).*?(missing|not showing|lost|dropped)",
+          "click_id.*?(not|missing|wrong|lost)",
+          "(Voluum|postback|S2S).*?(not receiving|failed|broken|issue)",
+          "(pixel|tracking).*?(not firing|broken|missing|issue)",
+          "(lead|callback).*?(not uploaded|failed|missing)",
+          "debug.*?(conversion|tracking|postback|pixel)"
+        ]
+      }
+    },
+    "campaign-ops": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "Full campaign lifecycle operations combining Cloudflare + Neon + Browser MCPs.",
+      "promptTriggers": {
+        "keywords": [
+          "launch campaign",
+          "new campaign",
+          "campaign check",
+          "daily check",
+          "morning check",
+          "campaign performance",
+          "campaign ops",
+          "end-to-end",
+          "full campaign",
+          "campaign workflow",
+          "new domain setup",
+          "add domain"
+        ],
+        "intentPatterns": [
+          "(launch|setup|create|new).*?(campaign|domain)",
+          "(daily|morning|weekly).*?(check|report|review)",
+          "campaign.*?(performance|ops|lifecycle|workflow)",
+          "end-to-end.*?(campaign|check|workflow)",
+          "(full|complete).*?(campaign|check|workflow)",
+          "(add|setup|configure).*?domain.*?campaign"
+        ]
+      }
     }
   },
   "notes": {
@@ -538,14 +726,20 @@
       "codebase-navigation": "Exploration - triggers on finding, searching, understanding structure",
       "new-skills": "Meta-development - triggers on skill creation and system understanding",
       "archon": "Task management - triggers when Archon MCP mentioned",
-      "browser-debugging": "Frontend debugging - triggers on console logs, network requests, browser issues",
+      "browser-debugging": "Frontend debugging (Browser MCP preferred) - triggers on console logs, network requests, browser issues",
       "crawl-cli": "Web crawling - triggers on site crawling, content extraction, documentation fetching",
       "payment-processing": "Payments - triggers on Polar.sh, Dodo Payments, checkout, webhooks",
       "seo-content-generation": "SEO workflow - triggers on keyword research, content transformation",
-      "analytics": "Analytics integration - triggers on Umami, tracking, events, conversions",
+      "analytics": "Analytics integration (incl. D1 pixel data via Cloudflare MCP) - triggers on Umami, tracking, events, conversions",
       "documentation-research": "Library docs - triggers on documentation requests, Context7, API references",
       "idea-to-product": "Product workflow - triggers on SaaS ideas, competitor analysis, GTM strategy",
-      "infra-ops": "Infrastructure - triggers on VPS, SSH, Docker, deployments, server management"
+      "infra-ops": "Infrastructure - triggers on VPS, SSH, Docker, deployments, server management",
+      "leads-pipeline": "MCP: Cloudflare D1 - triggers on leads, callbacks, Voluum, revenue queries",
+      "cloudflare-workers": "MCP: Cloudflare - triggers on worker deploy, D1 migration, wrangler, KV",
+      "db-ops": "MCP: Neon PostgreSQL - triggers on sites/settings/deploy_history queries and schema changes",
+      "lp-qa": "MCP: Browser - triggers on LP visual check, screenshot, compliance verification",
+      "conversion-debug": "MCP: Browser + Cloudflare - triggers on missing conversions, click_id issues, tracking bugs",
+      "campaign-ops": "MCP: All 3 - triggers on campaign launch, daily check, new domain setup"
     }
   }
 }

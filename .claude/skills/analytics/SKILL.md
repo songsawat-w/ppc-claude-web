@@ -1,7 +1,56 @@
 ---
 name: analytics
-description: Analytics Documentation and Best Practices. To be used when working with Datafa.st or Umami or other Analytics Tools.
+description: Analytics Documentation and Best Practices. To be used when working with Datafa.st, Umami, or querying first-party pixel data from Cloudflare D1 via Cloudflare MCP.
 ---
+# Analytics Integration (Umami, DataFast & First-Party Pixel D1)
+
+## First-Party Pixel Analytics (Cloudflare MCP → D1)
+
+โปรเจ็คนี้มี first-party tracking pixel ที่เก็บข้อมูลใน Cloudflare D1 (`pixel_events` table)
+ใช้ Cloudflare MCP query ข้อมูลได้โดยตรง ไม่ต้องผ่าน dashboard
+
+### Schema
+```sql
+pixel_events(id, event, session_id, click_id, gclid, timestamp, url, referrer, domain, details, created_at)
+```
+
+### Event Types
+| Event | เมื่อไหร่ |
+|-------|---------|
+| `page_view` | หน้า LP โหลด |
+| `scroll_50` | Scroll ถึง 50% |
+| `scroll_90` | Scroll ถึง 90% |
+| `form_start` | คลิก/focus form |
+| `form_submit` | Submit form |
+
+### Useful Queries
+```sql
+-- Unique visitors แยก domain (7 วัน)
+SELECT domain, COUNT(DISTINCT session_id) as visitors,
+       COUNT(CASE WHEN event = 'page_view' THEN 1 END) as pageviews
+FROM pixel_events
+WHERE created_at > datetime('now', '-7 days')
+GROUP BY domain ORDER BY visitors DESC;
+
+-- Funnel analysis
+SELECT
+  COUNT(CASE WHEN event = 'page_view' THEN 1 END) as views,
+  COUNT(CASE WHEN event = 'scroll_50' THEN 1 END) as scroll50,
+  COUNT(CASE WHEN event = 'form_start' THEN 1 END) as form_start,
+  COUNT(CASE WHEN event = 'form_submit' THEN 1 END) as form_submit
+FROM pixel_events
+WHERE domain = 'yourdomain.com'
+  AND created_at > datetime('now', '-7 days');
+
+-- Click IDs ที่ active (มี pixel event)
+SELECT DISTINCT click_id, COUNT(*) as events
+FROM pixel_events
+WHERE click_id != '' AND created_at > datetime('now', '-24 hours')
+GROUP BY click_id ORDER BY events DESC;
+```
+
+---
+
 # Analytics Integration (Umami & DataFast)
 
 This project uses **Umami** for server-side analytics API queries and **DataFast** for client-side event tracking and revenue attribution. This skill documents implementation patterns and best practices for both platforms.
