@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LP Factory v2 — UX/UI Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #08090f;
+    --bg2:       #0d0f1a;
+    --card:      #111422;
+    --card2:     #161929;
+    --hover:     #1a1e30;
+    --input:     #181c2e;
+    --border:    #1f2438;
+    --border2:   #262c44;
+    --text:      #dde2f0;
+    --muted:     #7b84a3;
+    --dim:       #4a5170;
+    --primary:   #5c6bf5;
+    --primaryH:  #7b88ff;
+    --primaryGlow: rgba(92,107,245,0.18);
+    --accent:    #00cff0;
+    --success:   #00c97a;
+    --danger:    #ff4d6a;
+    --warning:   #f5a623;
+    --purple:    #a78bfa;
+    --grad:      linear-gradient(135deg,#5c6bf5,#a855f7);
+  }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ─── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  .sidebar-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(92,107,245,.35);
+  }
+  .logo-text {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .logo-sub {
+    font-size: 9px;
+    color: var(--dim);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .sidebar-nav {
+    padding: 10px 0;
+    flex: 1;
+  }
+  .nav-section-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 10px 18px 5px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+    position: relative;
+    user-select: none;
+  }
+  .nav-item:hover {
+    background: var(--hover);
+    color: var(--text);
+  }
+  .nav-item.active {
+    color: var(--primary);
+    background: rgba(92,107,245,.08);
+    border-left-color: var(--primary);
+    font-weight: 600;
+  }
+  .nav-item .nav-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .nav-badge {
+    margin-left: auto;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: rgba(92,107,245,.15);
+    color: var(--primary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .sidebar-footer {
+    border-top: 1px solid var(--border);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .conn-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px var(--success);
+    animation: pulse 2s infinite;
+  }
+  .conn-label { font-size: 10px; color: var(--muted); }
+  .conn-val { font-size: 10px; color: var(--success); font-weight: 600; }
+
+  /* ─── MAIN ─────────────────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ─── TOPBAR ────────────────────────────────────── */
+  .topbar {
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    background: rgba(8,9,15,.8);
+    backdrop-filter: blur(12px);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  .breadcrumb-current {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .status-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--card);
+    cursor: default;
+  }
+  .status-chip .chip-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    font-size: 10px;
+    color: var(--dim);
+    background: var(--card);
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .kbd:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* ─── CONTENT ───────────────────────────────────── */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 28px 40px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  /* ─── PAGE HEADER ───────────────────────────────── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    animation: fadeUp .4s ease both;
+  }
+  .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .page-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-weight: 400;
+  }
+
+  /* ─── METRIC CARDS ──────────────────────────────── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .metric-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: border-color .2s, transform .2s;
+    animation: fadeUp .4s ease both;
+  }
+  .metric-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .metric-glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    opacity: 0.07;
+    transform: translate(20px,-20px);
+    pointer-events: none;
+  }
+  .metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .metric-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .metric-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .metric-value {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .metric-trend {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .trend-up   { color: var(--success); }
+  .trend-down { color: var(--danger); }
+  .trend-neu  { color: var(--dim); }
+
+  /* ─── MAIN GRID ─────────────────────────────────── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    align-items: start;
+  }
+  .left-col { display: flex; flex-direction: column; gap: 16px; }
+  .right-col { display: flex; flex-direction: column; gap: 16px; }
+
+  /* ─── CARD BASE ─────────────────────────────────── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    animation: fadeUp .4s ease both;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+  }
+  .card-title .ct-icon { color: var(--muted); }
+  .card-title .ct-count {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ─── SITES LIST ────────────────────────────────── */
+  .site-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+    border-radius: 4px;
+    margin: 0 -4px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .site-row:last-child { border-bottom: none; }
+  .site-row:hover { background: var(--hover); }
+  .site-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.05em;
+  }
+  .site-info { flex: 1; min-width: 0; }
+  .site-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .site-domain { font-size: 11px; color: var(--dim); margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+  .site-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 5px;
+    text-transform: uppercase;
+  }
+  .badge-success { background: rgba(0,201,122,.12); color: var(--success); }
+  .badge-warning { background: rgba(245,166,35,.12); color: var(--warning); }
+  .badge-dim     { background: rgba(74,81,112,.15);  color: var(--dim); }
+  .badge-primary { background: rgba(92,107,245,.12); color: var(--primary); }
+  .site-type { font-size: 9px; color: var(--dim); }
+
+  /* ─── QUICK ACTIONS ─────────────────────────────── */
+  .actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 14px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .15s;
+    text-align: left;
+  }
+  .action-btn:hover { border-color: var(--border2); background: var(--hover); transform: translateY(-1px); }
+  .action-btn:hover .action-icon { opacity: 1; }
+  .action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: .85;
+    transition: opacity .15s;
+  }
+  .action-label { font-size: 12px; font-weight: 600; }
+  .action-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+  /* ─── SYSTEM HEALTH ─────────────────────────────── */
+  .health-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .health-row:last-child { border-bottom: none; }
+  .health-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .health-name { font-size: 12px; font-weight: 500; flex: 1; }
+  .health-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .h-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .h-dot.ok      { background: var(--success); box-shadow: 0 0 5px var(--success); }
+  .h-dot.warn    { background: var(--warning); }
+  .h-dot.err     { background: var(--danger); }
+  .h-dot.off     { background: var(--dim); }
+
+  /* ─── SKELETON ──────────────────────────────────── */
+  .skeleton {
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--card2) 25%, var(--hover) 50%, var(--card2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+  }
+  .skeleton-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  /* ─── BUTTONS ───────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 9px 16px;
+    transition: all .15s;
+  }
+  .btn-primary {
+    background: var(--grad);
+    color: #fff;
+    box-shadow: 0 2px 16px rgba(92,107,245,.3);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(92,107,245,.4); }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { background: var(--hover); color: var(--text); }
+  .btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 6px; }
+  .btn-full { width: 100%; margin-top: 12px; }
+
+  /* ─── TOAST ─────────────────────────────────────── */
+  .toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 13px 16px;
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    border-radius: 11px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.3);
+    min-width: 300px;
+    max-width: 400px;
+    pointer-events: all;
+    animation: slideInRight .3s cubic-bezier(.34,1.56,.64,1) both;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    animation: progress 4s linear forwards;
+  }
+  .toast-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .toast-body { flex: 1; }
+  .toast-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .toast-msg   { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .toast-close {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: var(--dim);
+    cursor: pointer;
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: color .15s;
+    font-size: 14px;
+  }
+  .toast-close:hover { color: var(--text); }
+
+  /* ─── IMPROVEMENT LABEL ─────────────────────────── */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .tag-new { background: rgba(0,201,122,.12); color: var(--success); border: 1px solid rgba(0,201,122,.25); }
+
+  /* ─── RISK ALERT ────────────────────────────────── */
+  .risk-alert {
+    background: rgba(255,77,106,.05);
+    border: 1px solid rgba(255,77,106,.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: fadeUp .4s ease both;
+  }
+  .risk-icon { flex-shrink: 0; color: var(--danger); margin-top: 1px; }
+  .risk-title { font-size: 12px; font-weight: 700; color: var(--danger); margin-bottom: 4px; }
+  .risk-msg { font-size: 11px; color: var(--muted); }
+  .risk-link { font-size: 11px; color: var(--primary); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Sora', sans-serif; margin-top: 6px; display: block; }
+
+  /* ─── SEPARATOR ─────────────────────────────────── */
+  .separator {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+  }
+
+  /* ─── SCROLL STYLE ──────────────────────────────── */
+  .content::-webkit-scrollbar { width: 6px; }
+  .content::-webkit-scrollbar-track { background: transparent; }
+  .content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ─── COMMAND PALETTE ───────────────────────────── */
+  .palette-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(6px);
+    z-index: 9998;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 140px;
+    animation: fadeIn .15s ease;
+  }
+  .palette-box {
+    width: 520px;
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.7);
+    overflow: hidden;
+    animation: scaleIn .2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .palette-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .palette-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-weight: 500;
+  }
+  .palette-input::placeholder { color: var(--dim); }
+  .palette-results { max-height: 300px; overflow-y: auto; }
+  .palette-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 18px;
+    cursor: pointer;
+    transition: background .1s;
+  }
+  .palette-item:hover, .palette-item.sel { background: rgba(92,107,245,.1); }
+  .palette-item-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background: var(--hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .palette-item-label { font-size: 13px; font-weight: 500; }
+  .palette-item-sub   { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .palette-item-kbd   { margin-left: auto; font-size: 9px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+  .palette-footer {
+    padding: 8px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 14px;
+    font-size: 10px;
+    color: var(--dim);
+  }
+  .palette-footer span { display: flex; align-items: center; gap: 4px; }
+  .pk {
+    padding: 1px 5px;
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--dim);
+  }
+
+  /* ─── SECTION: SKELETON DEMO ────────────────────── */
+  .skeleton-section {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sk-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ─── ANIMATIONS ────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(.94); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .4; }
+  }
+  @keyframes progress {
+    from { width: 100%; }
+    to   { width: 0%; }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* stagger delays */
+  .metric-card:nth-child(1) { animation-delay: .05s; }
+  .metric-card:nth-child(2) { animation-delay: .10s; }
+  .metric-card:nth-child(3) { animation-delay: .15s; }
+  .metric-card:nth-child(4) { animation-delay: .20s; }
+  .metric-card:nth-child(5) { animation-delay: .25s; }
+  .metric-card:nth-child(6) { animation-delay: .30s; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">LP Factory</div>
+        <div class="logo-sub">v2 · All-in-One</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Workspace</div>
+
+    <div class="nav-item active" onclick="setPage('dashboard')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="setPage('sites')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Sites
+      <span class="nav-badge">5</span>
+    </div>
+    <div class="nav-item" onclick="setPage('variant')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>
+      Variant Studio
+    </div>
+    <div class="nav-item" onclick="setPage('deploys')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Deploy History
+      <span class="nav-badge">12</span>
+    </div>
+
+    <div class="nav-section-label" style="margin-top:8px">Operations</div>
+
+    <div class="nav-item" onclick="setPage('ops')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      Ops Center
+    </div>
+    <div class="nav-item" onclick="setPage('settings')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><circle cx="12" cy="12" r="7"/></svg>
+      Settings
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="conn-dot"></div>
+    <span class="conn-label">Neon DB</span>
+    <span class="conn-val" style="margin-left:4px">Connected</span>
+    <div style="margin-left:auto; display:flex; gap:4px;">
+      <div style="width:5px;height:5px;border-radius:50%;background:var(--success);" title="Cloudflare OK"></div>
+      <div style="width:5px;height:5px;border-radius:50%;background:var(--success);" title="Netlify OK"></div>
+      <div style="width:5px;height:5px;border-radius:50%;background:var(--warning);" title="AI Spend High"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="breadcrumb">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Workspace</span>
+      <span style="color:var(--border2)">/</span>
+      <span class="breadcrumb-current">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <!-- Status chips -->
+      <div class="status-chip">
+        <div class="chip-dot" style="background:var(--success)"></div>
+        <span style="color:var(--muted)">CF Pages</span>
+        <span style="color:var(--success)">Ready</span>
+      </div>
+      <div class="status-chip">
+        <div class="chip-dot" style="background:var(--success)"></div>
+        <span style="color:var(--muted)">Netlify</span>
+        <span style="color:var(--success)">Ready</span>
+      </div>
+      <div class="status-chip">
+        <div class="chip-dot" style="background:var(--warning);"></div>
+        <span style="color:var(--muted)">AI Spend</span>
+        <span style="color:var(--warning);font-family:'JetBrains Mono',monospace">$0.48</span>
+      </div>
+      <div class="kbd" onclick="togglePalette()" title="Open command palette">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        ⌘K
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-sub">LP portfolio overview — Elastic Credits Engine</p>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('success')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create New LP
+      </button>
+    </div>
+
+    <!-- Risk Alert -->
+    <div class="risk-alert">
+      <div class="risk-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div>
+        <div class="risk-title">Correlation Risk Detected</div>
+        <div class="risk-msg">2 sites share the same Cloudflare account and overlapping ad networks — high fingerprint risk.</div>
+        <button class="risk-link" onclick="showToast('info')">View in Ops Center →</button>
+      </div>
+    </div>
+
+    <!-- ── METRIC CARDS ── -->
+    <div class="metrics-grid">
+
+      <div class="metric-card">
+        <div class="metric-glow" style="background:var(--primary)"></div>
+        <div class="metric-header">
+          <span class="metric-label">Total Sites</span>
+          <div class="metric-icon-wrap" style="background:rgba(92,107,245,.12)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+        </div>
+        <div class="metric-value" style="color:var(--primary)">5</div>
+        <div class="metric-trend trend-up">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          +2 this week
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-glow" style="background:var(--success)"></div>
+        <div class="metric-header">
+          <span class="metric-label">Active</span>
+          <div class="metric-icon-wrap" style="background:rgba(0,201,122,.12)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="metric-value" style="color:var(--success)">5</div>
+        <div class="metric-trend trend-up">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          100% uptime
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-glow" style="background:var(--accent)"></div>
+        <div class="metric-header">
+          <span class="metric-label">Builds</span>
+          <div class="metric-icon-wrap" style="background:rgba(0,207,240,.12)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+        </div>
+        <div class="metric-value" style="color:var(--accent)">24</div>
+        <div class="metric-trend trend-up">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          +7 today
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-glow" style="background:var(--warning)"></div>
+        <div class="metric-header">
+          <span class="metric-label">API Spend</span>
+          <div class="metric-icon-wrap" style="background:rgba(245,166,35,.12)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+        </div>
+        <div class="metric-value" style="color:var(--warning)">$0.48</div>
+        <div class="metric-trend trend-down">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+          +$0.47 vs last
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-glow" style="background:var(--purple)"></div>
+        <div class="metric-header">
+          <span class="metric-label">Ops Domains</span>
+          <div class="metric-icon-wrap" style="background:rgba(167,139,250,.12)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+        </div>
+        <div class="metric-value" style="color:var(--purple)">3</div>
+        <div class="metric-trend trend-neu">— no change</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-glow" style="background:var(--success)"></div>
+        <div class="metric-header">
+          <span class="metric-label">Active Cards</span>
+          <div class="metric-icon-wrap" style="background:rgba(0,201,122,.12)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+        </div>
+        <div class="metric-value" style="color:var(--success)">2</div>
+        <div class="metric-trend trend-up">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          $840 budget left
+        </div>
+      </div>
+
+    </div><!-- /metrics-grid -->
+
+    <!-- ── MAIN GRID ── -->
+    <div class="main-grid">
+
+      <!-- LEFT -->
+      <div class="left-col">
+
+        <!-- Recent Sites -->
+        <div class="card" style="animation-delay:.15s">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Recent Sites
+            <span class="tag tag-new">Improved</span>
+            <span class="ct-count">5 / 5</span>
+          </div>
+
+          <div class="site-row">
+            <div class="site-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">QC</div>
+            <div class="site-info">
+              <div class="site-name">QuickCash Personal</div>
+              <div class="site-domain">quickcash-lp.pages.dev</div>
+            </div>
+            <div class="site-meta">
+              <span class="badge badge-success">● Active</span>
+              <span class="site-type">Personal Loan</span>
+            </div>
+          </div>
+
+          <div class="site-row">
+            <div class="site-avatar" style="background:linear-gradient(135deg,#059669,#064e3b)">FE</div>
+            <div class="site-info">
+              <div class="site-name">FastEmerge Medical</div>
+              <div class="site-domain">fastem-med.netlify.app</div>
+            </div>
+            <div class="site-meta">
+              <span class="badge badge-success">● Active</span>
+              <span class="site-type">Medical Financing</span>
+            </div>
+          </div>
+
+          <div class="site-row">
+            <div class="site-avatar" style="background:linear-gradient(135deg,#7c3aed,#4c1d95)">AC</div>
+            <div class="site-info">
+              <div class="site-name">AutoCapital Loans</div>
+              <div class="site-domain">autocap-v2.pages.dev</div>
+            </div>
+            <div class="site-meta">
+              <span class="badge badge-success">● Active</span>
+              <span class="site-type">Auto Loan</span>
+            </div>
+          </div>
+
+          <div class="site-row">
+            <div class="site-avatar" style="background:linear-gradient(135deg,#dc2626,#7f1d1d)">PF</div>
+            <div class="site-info">
+              <div class="site-name">PetFirst Care</div>
+              <div class="site-domain">petfirst-lp.netlify.app</div>
+            </div>
+            <div class="site-meta">
+              <span class="badge badge-warning">⚠ Review</span>
+              <span class="site-type">Pet Care</span>
+            </div>
+          </div>
+
+          <div class="site-row">
+            <div class="site-avatar" style="background:linear-gradient(135deg,#0891b2,#164e63)">IC</div>
+            <div class="site-info">
+              <div class="site-name">InstaCash Instalment</div>
+              <div class="site-domain">instacash.pages.dev</div>
+            </div>
+            <div class="site-meta">
+              <span class="badge badge-success">● Active</span>
+              <span class="site-type">Installment</span>
+            </div>
+          </div>
+
+          <button class="btn btn-ghost btn-full btn-sm">View All Sites →</button>
+        </div>
+
+        <!-- Skeleton Loading Demo -->
+        <div class="card" style="animation-delay:.2s">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Skeleton Loading State
+            <span class="tag tag-new">New</span>
+          </div>
+          <div class="skeleton-section">
+            <div class="sk-row">
+              <div class="skeleton" style="width:36px;height:36px;border-radius:9px;flex-shrink:0"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                <div class="skeleton" style="height:12px;width:60%"></div>
+                <div class="skeleton" style="height:10px;width:40%"></div>
+              </div>
+              <div class="skeleton" style="width:50px;height:18px;border-radius:5px"></div>
+            </div>
+            <div class="sk-row">
+              <div class="skeleton" style="width:36px;height:36px;border-radius:9px;flex-shrink:0"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                <div class="skeleton" style="height:12px;width:75%"></div>
+                <div class="skeleton" style="height:10px;width:45%"></div>
+              </div>
+              <div class="skeleton" style="width:50px;height:18px;border-radius:5px"></div>
+            </div>
+            <div class="sk-row">
+              <div class="skeleton" style="width:36px;height:36px;border-radius:9px;flex-shrink:0"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                <div class="skeleton" style="height:12px;width:55%"></div>
+                <div class="skeleton" style="height:10px;width:35%"></div>
+              </div>
+              <div class="skeleton" style="width:50px;height:18px;border-radius:5px"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /left-col -->
+
+      <!-- RIGHT -->
+      <div class="right-col">
+
+        <!-- Quick Actions -->
+        <div class="card" style="animation-delay:.2s">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Quick Actions
+          </div>
+          <div class="actions-grid">
+            <div class="action-btn" onclick="showToast('success','LP Builder launched!')">
+              <div class="action-icon" style="background:rgba(92,107,245,.12)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </div>
+              <div>
+                <div class="action-label">Build New</div>
+                <div class="action-sub">6-step wizard</div>
+              </div>
+            </div>
+            <div class="action-btn" onclick="showToast('info','AI Assets panel coming soon')">
+              <div class="action-icon" style="background:rgba(167,139,250,.12)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><circle cx="19" cy="5" r="3"/></svg>
+              </div>
+              <div>
+                <div class="action-label">AI Assets</div>
+                <div class="action-sub">Copy generator</div>
+              </div>
+            </div>
+            <div class="action-btn" onclick="showToast('info','Opening Ops Center')">
+              <div class="action-icon" style="background:rgba(0,207,240,.12)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              </div>
+              <div>
+                <div class="action-label">Ops Center</div>
+                <div class="action-sub">Domains · Cards</div>
+              </div>
+            </div>
+            <div class="action-btn" onclick="showToast('warning','Review your config')">
+              <div class="action-icon" style="background:rgba(245,166,35,.12)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+              </div>
+              <div>
+                <div class="action-label">Settings</div>
+                <div class="action-sub">Keys · Deploy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="card" style="animation-delay:.25s">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            System Health
+            <span class="tag tag-new">Live</span>
+          </div>
+
+          <div class="health-row">
+            <div class="health-icon" style="background:rgba(0,201,122,.1)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <span class="health-name">Neon PostgreSQL</span>
+            <div class="health-status" style="color:var(--success)">
+              <div class="h-dot ok"></div> Connected
+            </div>
+          </div>
+
+          <div class="health-row">
+            <div class="health-icon" style="background:rgba(92,107,245,.1)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>
+            </div>
+            <span class="health-name">Cloudflare Pages</span>
+            <div class="health-status" style="color:var(--success)">
+              <div class="h-dot ok"></div> Ready
+            </div>
+          </div>
+
+          <div class="health-row">
+            <div class="health-icon" style="background:rgba(0,201,122,.1)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <span class="health-name">Netlify Deploy</span>
+            <div class="health-status" style="color:var(--success)">
+              <div class="h-dot ok"></div> Ready
+            </div>
+          </div>
+
+          <div class="health-row">
+            <div class="health-icon" style="background:rgba(167,139,250,.1)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <span class="health-name">Anthropic AI</span>
+            <div class="health-status" style="color:var(--success)">
+              <div class="h-dot ok"></div> API OK
+            </div>
+          </div>
+
+          <div class="health-row">
+            <div class="health-icon" style="background:rgba(245,166,35,.1)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <span class="health-name">LeadingCards API</span>
+            <div class="health-status" style="color:var(--warning)">
+              <div class="h-dot warn"></div> Rate Limited
+            </div>
+          </div>
+
+          <div class="health-row">
+            <div class="health-icon" style="background:rgba(74,81,112,.1)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <span class="health-name">Multilogin X</span>
+            <div class="health-status" style="color:var(--dim)">
+              <div class="h-dot off"></div> Not Set
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast Demo Button -->
+        <div class="card" style="animation-delay:.3s">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Toast Notification Demo
+            <span class="tag tag-new">Improved</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button class="btn btn-sm" style="background:rgba(0,201,122,.12);color:var(--success);border:1px solid rgba(0,201,122,.25)" onclick="showToast('success','Site deployed to Cloudflare Pages successfully!')">Success</button>
+            <button class="btn btn-sm" style="background:rgba(255,77,106,.12);color:var(--danger);border:1px solid rgba(255,77,106,.25)" onclick="showToast('danger','API token invalid — check Settings')">Error</button>
+            <button class="btn btn-sm" style="background:rgba(245,166,35,.12);color:var(--warning);border:1px solid rgba(245,166,35,.25)" onclick="showToast('warning','Spending limit 80% reached')">Warning</button>
+            <button class="btn btn-sm" style="background:rgba(92,107,245,.12);color:var(--primary);border:1px solid rgba(92,107,245,.25)" onclick="showToast('info','Build queued — estimated 12s')">Info</button>
+          </div>
+        </div>
+
+      </div><!-- /right-col -->
+    </div><!-- /main-grid -->
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ══════════════ TOAST CONTAINER ══════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ══════════════ COMMAND PALETTE ══════════════ -->
+<div class="palette-overlay" id="palette" style="display:none" onclick="closePalette(event)">
+  <div class="palette-box" onclick="event.stopPropagation()">
+    <div class="palette-search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="palette-input" placeholder="Search pages, sites, actions…" id="paletteInput" oninput="filterPalette(this.value)">
+      <span style="font-size:10px;color:var(--dim);font-family:'JetBrains Mono',monospace">ESC</span>
+    </div>
+    <div class="palette-results" id="paletteResults">
+      <div class="palette-item sel">
+        <div class="palette-item-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+        <div><div class="palette-item-label">Dashboard</div><div class="palette-item-sub">Main overview</div></div>
+        <span class="palette-item-kbd">G D</span>
+      </div>
+      <div class="palette-item">
+        <div class="palette-item-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <div><div class="palette-item-label">Sites</div><div class="palette-item-sub">Manage landing pages</div></div>
+        <span class="palette-item-kbd">G S</span>
+      </div>
+      <div class="palette-item">
+        <div class="palette-item-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div><div class="palette-item-label">Create New LP</div><div class="palette-item-sub">Open 6-step wizard</div></div>
+        <span class="palette-item-kbd">C</span>
+      </div>
+      <div class="palette-item">
+        <div class="palette-item-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+        <div><div class="palette-item-label">Ops Center</div><div class="palette-item-sub">Domains, cards, profiles</div></div>
+        <span class="palette-item-kbd">G O</span>
+      </div>
+      <div class="palette-item">
+        <div class="palette-item-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+        <div><div class="palette-item-label">Settings</div><div class="palette-item-sub">API keys &amp; deploy config</div></div>
+        <span class="palette-item-kbd">G .</span>
+      </div>
+    </div>
+    <div class="palette-footer">
+      <span><span class="pk">↑↓</span> navigate</span>
+      <span><span class="pk">↵</span> open</span>
+      <span><span class="pk">ESC</span> close</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── Nav page switch ───────────────────
+  function setPage(page) {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  // ─── Toast system ──────────────────────
+  let toastId = 0;
+  const TOAST_CONFIG = {
+    success: { title:'Success', color:'#00c97a', icon:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' },
+    danger:  { title:'Error',   color:'#ff4d6a', icon:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' },
+    warning: { title:'Warning', color:'#f5a623', icon:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' },
+    info:    { title:'Info',    color:'#5c6bf5', icon:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' },
+  };
+  const DEFAULT_MSGS = {
+    success: 'Site deployed to Cloudflare Pages successfully!',
+    danger:  'API token invalid — check Settings.',
+    warning: 'Spending limit 80% reached.',
+    info:    'Build queued — estimated 12s.',
+  };
+
+  function showToast(type, msg) {
+    const cfg = TOAST_CONFIG[type];
+    const message = msg || DEFAULT_MSGS[type];
+    const id = ++toastId;
+    const container = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.id = `toast-${id}`;
+    el.innerHTML = `
+      <div class="toast-icon-wrap" style="background:${cfg.color}18;color:${cfg.color}">${cfg.icon}</div>
+      <div class="toast-body">
+        <div class="toast-title" style="color:${cfg.color}">${cfg.title}</div>
+        <div class="toast-msg">${message}</div>
+      </div>
+      <button class="toast-close" onclick="dismissToast(${id})">✕</button>
+      <div class="toast-progress" style="background:${cfg.color}66"></div>
+    `;
+    container.appendChild(el);
+    setTimeout(() => dismissToast(id), 4200);
+  }
+
+  function dismissToast(id) {
+    const el = document.getElementById(`toast-${id}`);
+    if (!el) return;
+    el.style.animation = 'none';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(20px)';
+    el.style.transition = 'all .2s ease';
+    setTimeout(() => el.remove(), 200);
+  }
+
+  // ─── Command Palette ───────────────────
+  function togglePalette() {
+    const p = document.getElementById('palette');
+    const isOpen = p.style.display !== 'none';
+    p.style.display = isOpen ? 'none' : 'flex';
+    if (!isOpen) setTimeout(() => document.getElementById('paletteInput').focus(), 50);
+  }
+  function closePalette(e) {
+    if (e.target === document.getElementById('palette')) {
+      document.getElementById('palette').style.display = 'none';
+    }
+  }
+  function filterPalette(val) {
+    const items = document.querySelectorAll('.palette-item');
+    items.forEach(item => {
+      const label = item.querySelector('.palette-item-label').textContent.toLowerCase();
+      item.style.display = label.includes(val.toLowerCase()) ? '' : 'none';
+    });
+  }
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); togglePalette(); }
+    if (e.key === 'Escape') document.getElementById('palette').style.display = 'none';
+  });
+</script>
+</body>
+</html>
