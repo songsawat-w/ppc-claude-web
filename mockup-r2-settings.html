@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R2 Settings — LP Factory v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #08090f; --bg2: #0d0f1a; --card: #111422; --card2: #161929;
+    --hover: #1a1e30; --input: #181c2e; --border: #1f2438; --border2: #262c44;
+    --text: #dde2f0; --muted: #7b84a3; --dim: #4a5170;
+    --primary: #5c6bf5; --success: #00c97a; --danger: #ff4d6a; --warning: #f5a623;
+    --grad: linear-gradient(135deg,#5c6bf5,#a855f7);
+  }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+  /* Sidebar stub */
+  .sidebar { width: 220px; background: var(--bg2); border-right: 1px solid var(--border); flex-shrink: 0; padding: 20px 0; }
+  .logo { display: flex; align-items: center; gap: 9px; padding: 0 18px 20px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  .logo-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--grad); display: flex; align-items: center; justify-content: center; }
+  .logo-text { font-size: 13px; font-weight: 700; }
+  .logo-sub { font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; }
+  .nav-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--dim); padding: 8px 18px 4px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 18px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; border-left: 2px solid transparent; }
+  .nav-item.active { color: var(--primary); background: rgba(92,107,245,.08); border-left-color: var(--primary); font-weight: 600; }
+  .nav-item svg { flex-shrink: 0; }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { height: 52px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; gap: 8px; font-size: 12px; color: var(--dim); background: rgba(8,9,15,.8); }
+  .topbar-sep { color: var(--border2); }
+  .topbar-cur { color: var(--text); font-weight: 600; }
+  .content { flex: 1; overflow-y: auto; padding: 28px; max-width: 720px; }
+  .page-title { font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin-bottom: 4px; }
+  .page-sub { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+
+  /* Cards */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; animation: fadeUp .35s ease both; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .card-sub { font-size: 11px; color: var(--dim); margin-bottom: 16px; }
+
+  /* Form */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .grid-1 { margin-bottom: 10px; }
+  label.field-label { display: block; font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .inp {
+    width: 100%; padding: 9px 12px; background: var(--input); border: 1px solid var(--border);
+    border-radius: 7px; color: var(--text); font-size: 13px; font-family: 'Sora', sans-serif;
+    outline: none; transition: border-color .15s, box-shadow .15s;
+  }
+  .inp:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(92,107,245,.15); }
+  .inp::placeholder { color: var(--dim); }
+  .inp.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .help { font-size: 10px; color: var(--dim); margin-top: 4px; line-height: 1.5; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 8px; font-family: 'Sora', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer; padding: 8px 14px; transition: all .15s; }
+  .btn-primary { background: var(--grad); color: #fff; box-shadow: 0 2px 12px rgba(92,107,245,.25); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(92,107,245,.35); }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+  .btn-ghost:hover { background: var(--hover); color: var(--text); }
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+
+  /* Status badge */
+  .status-ok { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--success); background: rgba(0,201,122,.08); border: 1px solid rgba(0,201,122,.2); padding: 4px 10px; border-radius: 6px; margin-bottom: 10px; }
+  .status-ok .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 5px var(--success); }
+
+  /* R2 card highlight */
+  .card.r2-card { border-color: rgba(92,107,245,.25); }
+  .r2-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; background: rgba(0,201,122,.1); color: var(--success); border: 1px solid rgba(0,201,122,.2); margin-left: 6px; vertical-align: middle; }
+
+  /* Other deploy cards — dimmed */
+  .card.dim-card { opacity: .55; }
+
+  /* Divider label */
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin: 24px 0 12px; display: flex; align-items: center; gap: 10px; }
+  .section-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .card:nth-child(1) { animation-delay: .05s; }
+  .card:nth-child(2) { animation-delay: .10s; }
+  .card:nth-child(3) { animation-delay: .15s; }
+  .card:nth-child(4) { animation-delay: .20s; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">LP Factory</div>
+      <div class="logo-sub">v2 · All-in-One</div>
+    </div>
+  </div>
+  <div class="nav-label">Workspace</div>
+  <div class="nav-item">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </div>
+  <div class="nav-item">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    Sites
+  </div>
+  <div class="nav-label" style="margin-top:8px">Operations</div>
+  <div class="nav-item">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+    Ops Center
+  </div>
+  <div class="nav-item active">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    Settings
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    <span>Workspace</span>
+    <span class="topbar-sep">/</span>
+    <span class="topbar-cur">Settings</span>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">Settings</h1>
+    <p class="page-sub">API keys, deploy credentials, and integrations</p>
+
+    <!-- Section: Deploy Targets -->
+    <div class="section-label">Deploy Targets</div>
+
+    <!-- CF Pages (existing, dimmed) -->
+    <div class="card dim-card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>
+        Cloudflare Pages
+      </div>
+      <div class="card-sub">Primary — fast, free, CF integration (P1)</div>
+    </div>
+
+    <!-- S3 + CloudFront (existing, dimmed) -->
+    <div class="card dim-card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        S3 + CloudFront
+      </div>
+      <div class="card-sub">AWS — US-focused, low latency (P5)</div>
+    </div>
+
+    <!-- R2 — NEW / Highlighted -->
+    <div class="card r2-card">
+      <div class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        Cloudflare R2
+        <span class="r2-badge">✦ New</span>
+      </div>
+      <div class="card-sub">Zero-egress object storage — S3-compatible, CF ecosystem. สร้าง API token ที่ R2 → Manage API tokens ใน CF Dashboard</div>
+
+      <div class="status-ok">
+        <div class="dot"></div>
+        Bucket reachable — lp-landing-pages
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Access Key ID</label>
+          <input class="inp mono" type="password" value="••••••••••••••••••••" readonly />
+        </div>
+        <div>
+          <label class="field-label">Secret Access Key</label>
+          <input class="inp mono" type="password" value="••••••••••••••••••••••••••••••••••••••••" readonly />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Account ID</label>
+          <input class="inp mono" value="a1b2c3d4e5f6789..." readonly />
+        </div>
+        <div>
+          <label class="field-label">Bucket Name</label>
+          <input class="inp" value="lp-landing-pages" readonly />
+        </div>
+      </div>
+
+      <div class="grid-1">
+        <label class="field-label">Public URL <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input class="inp mono" value="https://pub-a1b2c3d4.r2.dev" readonly />
+        <div class="help">ใส่ custom domain หรือ r2.dev URL — เว้นว่างไว้ถ้ายังไม่ได้เปิด public access ใน CF dashboard</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+          Test Connection
+        </button>
+        <button class="btn btn-primary">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
