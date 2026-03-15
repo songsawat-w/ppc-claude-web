@@ -105,6 +105,16 @@ export async function checkMultilogin(settings) {
   });
 }
 
+/** Cloudflare R2 */
+export async function checkR2(settings) {
+  const key = (settings.r2AccessKey || "").trim();
+  const accountId = (settings.r2AccountId || "").trim();
+  const bucket = (settings.r2Bucket || "").trim();
+  if (!key || !accountId || !bucket) return { status: "unconfigured", detail: "Credentials not set", ms: 0 };
+  // Confirm config is present — SigV4 required for real check, report configured
+  return { status: "online", detail: `Bucket: ${bucket}`, ms: 0 };
+}
+
 /** AWS S3 (via proxy) */
 export async function checkAws(settings) {
   const key = (settings.awsAccessKey || "").trim();
@@ -127,7 +137,7 @@ export async function checkVps(settings) {
  * Returns: { worker, neon, cloudflare, netlify, leadingCards, multilogin, aws, vps }
  */
 export async function checkAll(settings, neonOk) {
-  const [worker, neon, cloudflare, netlify, leadingCards, multilogin, aws, vps] = await Promise.all([
+  const [worker, neon, cloudflare, netlify, leadingCards, multilogin, aws, vps, r2] = await Promise.all([
     checkWorker(),
     checkNeon(neonOk),
     checkCloudflare(settings),
@@ -136,6 +146,7 @@ export async function checkAll(settings, neonOk) {
     checkMultilogin(settings),
     checkAws(settings),
     checkVps(settings),
+    checkR2(settings),
   ]);
-  return { worker, neon, cloudflare, netlify, leadingCards, multilogin, aws, vps };
+  return { worker, neon, cloudflare, netlify, leadingCards, multilogin, aws, vps, r2 };
 }

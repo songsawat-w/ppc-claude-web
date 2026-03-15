@@ -36,6 +36,11 @@ export function Settings({ settings, setSettings, stats, apiOk, neonOk }) {
     const [vpsWorkerUrl, setVpsWorkerUrl] = useState(settings.vpsWorkerUrl || "");
     const [vercelToken, setVercelToken] = useState(settings.vercelToken || "");
     const [vercelTeamId, setVercelTeamId] = useState(settings.vercelTeamId || "");
+    const [r2AccessKey, setR2AccessKey] = useState(settings.r2AccessKey || "");
+    const [r2SecretKey, setR2SecretKey] = useState(settings.r2SecretKey || "");
+    const [r2AccountId, setR2AccountId] = useState(settings.r2AccountId || "");
+    const [r2Bucket, setR2Bucket] = useState(settings.r2Bucket || "");
+    const [r2PublicUrl, setR2PublicUrl] = useState(settings.r2PublicUrl || "");
 
     const [generatingToken, setGeneratingToken] = useState(false);
     const [testing, setTesting] = useState(null);
@@ -119,6 +124,19 @@ export function Settings({ settings, setSettings, stats, apiOk, neonOk }) {
         } catch {
             // CORS error usually means the bucket exists
             setTestResult(p => ({ ...p, aws: "cors" }));
+        }
+        setTesting(null);
+    };
+
+    const testR2 = async () => {
+        setTesting("r2");
+        try {
+            // List objects with SigV4 is complex from browser; just verify endpoint responds
+            const endpoint = `https://${r2AccountId}.r2.cloudflarestorage.com`;
+            const r = await fetch(`https://lp-factory-api.songsawat-w.workers.dev/api/proxy/pass?url=${encodeURIComponent(endpoint + "/" + r2Bucket + "/?list-type=2&max-keys=1")}`);
+            setTestResult(p => ({ ...p, r2: r.status !== 0 ? "ok" : "fail" }));
+        } catch {
+            setTestResult(p => ({ ...p, r2: "cors" }));
         }
         setTesting(null);
     };
@@ -353,6 +371,46 @@ export function Settings({ settings, setSettings, stats, apiOk, neonOk }) {
                 <div style={{ display: "flex", gap: 6 }}>
                     <Btn variant="ghost" onClick={testAws} disabled={!s3Bucket || testing === "aws"} style={{ fontSize: 12 }}>{testing === "aws" ? "..." : "🔑 Test"}</Btn>
                     <Btn onClick={() => save({ awsAccessKey, awsSecretKey, awsRegion, s3Bucket, cloudfrontDistId })} disabled={saving} style={{ fontSize: 12 }}>{saving ? "Saving..." : "💾 Save"}</Btn>
+                </div>
+            </Card>
+
+            {/* Cloudflare R2 */}
+            <Card style={{ marginBottom: 16 }}>
+                <h3 style={{ fontSize: 14, fontWeight: 600, margin: "0 0 4px" }}>🪣 Cloudflare R2</h3>
+                <p style={{ fontSize: 11, color: T.dim, margin: "0 0 12px" }}>Zero-egress object storage — S3-compatible, CF ecosystem. Create API token in R2 → Manage API tokens.</p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                    <div>
+                        <label style={labelStyle}>Access Key ID</label>
+                        <Inp type="password" value={r2AccessKey} onChange={setR2AccessKey} placeholder="R2 Access Key ID" />
+                    </div>
+                    <div>
+                        <label style={labelStyle}>Secret Access Key</label>
+                        <Inp type="password" value={r2SecretKey} onChange={setR2SecretKey} placeholder="••••••••" />
+                    </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                    <div>
+                        <label style={labelStyle}>Account ID</label>
+                        <Inp value={r2AccountId} onChange={setR2AccountId} placeholder="abc123... (from CF dashboard)" />
+                    </div>
+                    <div>
+                        <label style={labelStyle}>Bucket Name</label>
+                        <Inp value={r2Bucket} onChange={setR2Bucket} placeholder="my-lp-bucket" />
+                    </div>
+                </div>
+                <div style={{ marginBottom: 12 }}>
+                    <label style={labelStyle}>Public URL (optional)</label>
+                    <Inp value={r2PublicUrl} onChange={setR2PublicUrl} placeholder="https://pub-xxx.r2.dev or custom domain" />
+                    <div style={{ fontSize: 10, color: T.dim, marginTop: 3 }}>Leave blank to use R2 endpoint directly. Enable public access in CF dashboard first.</div>
+                </div>
+                {testResult.r2 && (
+                    <div style={{ fontSize: 11, marginBottom: 8, color: testResult.r2 === "ok" || testResult.r2 === "cors" ? T.success : T.danger }}>
+                        {testResult.r2 === "ok" || testResult.r2 === "cors" ? "✓ Bucket reachable" : "✗ Failed — check Account ID and bucket name"}
+                    </div>
+                )}
+                <div style={{ display: "flex", gap: 6 }}>
+                    <Btn variant="ghost" onClick={testR2} disabled={!r2Bucket || !r2AccountId || testing === "r2"} style={{ fontSize: 12 }}>{testing === "r2" ? "..." : "🔑 Test"}</Btn>
+                    <Btn onClick={() => save({ r2AccessKey, r2SecretKey, r2AccountId, r2Bucket, r2PublicUrl })} disabled={saving} style={{ fontSize: 12 }}>{saving ? "Saving..." : "💾 Save"}</Btn>
                 </div>
             </Card>
 

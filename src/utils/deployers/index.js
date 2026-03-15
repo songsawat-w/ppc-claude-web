@@ -10,6 +10,7 @@ import * as cfWorkers from "./cf-workers.js";
 import * as s3Cloudfront from "./s3-cloudfront.js";
 import * as vpsSsh from "./vps-ssh.js";
 import * as vercel from "./vercel.js";
+import * as r2 from "./r2.js";
 
 const DEPLOYERS = {
   "cf-pages": cfPages,
@@ -18,6 +19,7 @@ const DEPLOYERS = {
   "s3-cloudfront": s3Cloudfront,
   "vps-ssh": vpsSsh,
   "vercel": vercel,
+  "r2": r2,
 };
 
 export const DEPLOY_TARGETS = [
@@ -27,6 +29,7 @@ export const DEPLOY_TARGETS = [
   { id: "s3-cloudfront", label: "S3 + CloudFront", icon: "🪣", priority: 5, description: "AWS — US-focused, low latency" },
   { id: "vercel", label: "Vercel", icon: "▲", priority: 3, description: "Reliable — standard static hosting" },
   { id: "vps-ssh", label: "VPS (SSH)", icon: "🖥️", priority: 6, description: "Self-managed server, full control" },
+  { id: "r2", label: "Cloudflare R2", icon: "🪣", priority: 2, description: "Zero-egress object storage — CF ecosystem" },
 ];
 
 /**
@@ -74,6 +77,8 @@ function isTargetConfigured(target, settings) {
       return !!(settings.vpsHost && settings.vpsUser && settings.vpsPath && (settings.vpsWorkerUrl || settings.workerBaseUrl));
     case "vercel":
       return !!settings.vercelToken;
+    case "r2":
+      return !!(settings.r2AccessKey && settings.r2SecretKey && settings.r2AccountId && settings.r2Bucket);
     default:
       return false;
   }
