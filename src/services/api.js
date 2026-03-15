@@ -1,12 +1,20 @@
 const API_BASE = window.__LP_API__ || "https://lp-factory-api.songsawat-w.workers.dev/api";
 
-async function request(path, opts = {}) {
-    const r = await fetch(`${API_BASE}${path}`, opts);
-    if (!r.ok) {
-        const text = await r.text().catch(() => '');
-        return { error: `HTTP ${r.status}`, detail: text };
+async function request(path, opts = {}, timeoutMs = 8000) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+        const r = await fetch(`${API_BASE}${path}`, { ...opts, signal: ctrl.signal });
+        clearTimeout(timer);
+        if (!r.ok) {
+            const text = await r.text().catch(() => '');
+            return { error: `HTTP ${r.status}`, detail: text };
+        }
+        return r.json();
+    } catch (e) {
+        clearTimeout(timer);
+        throw e;
     }
-    return r.json();
 }
 
 export const api = {
